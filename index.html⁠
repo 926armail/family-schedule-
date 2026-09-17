@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>График</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            text-align: center;
+            padding: 30px 20px;
+            margin: 0;
+        }
+        h2 { margin-bottom: 20px; }
+        input[type="date"] {
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 30px;
+        }
+        .result-box {
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            display: inline-block;
+            min-width: 250px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h2>Кто сегодня дома?</h2>
+    <input type="date" id="datePicker" />
+    <br>
+    <div id="resultBox" class="result-box" style="background-color: #9e9e9e;">Выберите дату</div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); 
+
+        const datePicker = document.getElementById('datePicker');
+        const resultBox = document.getElementById('resultBox');
+
+        // Устанавливаем сегодняшнюю дату при открытии
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        datePicker.value = ${yyyy}-${mm}-${dd};
+
+        function updateSchedule() {
+            if (!datePicker.value) return;
+            const targetDate = new Date(datePicker.value);
+            const targetMs = Date.UTC(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+
+            // График женщины: цикл 10 дней, старт 16.09.2026 (месяц 8, т.к. отсчет с 0)
+            const womanAnchorMs = Date.UTC(2026, 8, 16);
+            const daysDiffWoman = Math.floor((targetMs - womanAnchorMs) / (1000 * 60 * 60 * 24));
+            let womanCycleDay = daysDiffWoman % 10;
+            if (womanCycleDay < 0) womanCycleDay += 10;
+            let womanWorks = (womanCycleDay === 0  womanCycleDay === 1  womanCycleDay === 5  womanCycleDay === 6  womanCycleDay === 7);
+
+            // График мужчины: вт, чт, чередующиеся пт. Старт пт 18.09.2026 (рабочая)
+            const dayOfWeek = targetDate.getUTCDay();
+            let manWorks = false;
+            if (dayOfWeek === 2 || dayOfWeek === 4) {
+                manWorks = true;
+            } else if (dayOfWeek === 5) {
+                const manAnchorMs = Date.UTC(2026, 8, 18);
+                const daysDiffMan = Math.floor((targetMs - manAnchorMs) / (1000 * 60 * 60 * 24));
+                const weeksDiff = Math.floor(daysDiffMan / 7);
+                if (Math.abs(weeksDiff) % 2 === 0) manWorks = true;
+            }
+
+            // Вывод результата
+            if (!manWorks && !womanWorks) {
+                resultBox.innerHTML = "🏠 Оба дома";
+                resultBox.style.backgroundColor = "#4CAF50"; // Зеленый
+            } else if (!manWorks && womanWorks) {
+                resultBox.innerHTML = "👨 Только мужчина";
+                resultBox.style.backgroundColor = "#2196F3"; // Синий
+            } else if (manWorks && !womanWorks) {
+                resultBox.innerHTML = "👩 Только женщина";
+                resultBox.style.backgroundColor = "#E91E63"; // Розовый
+            } else {
+                resultBox.innerHTML = "🏢 Обоих нет";
+                resultBox.style.backgroundColor = "#607D8B"; // Серый
+            }
+        }
+
+        datePicker.addEventListener('change', updateSchedule);
+        updateSchedule(); // Запуск расчета для сегодняшнего дня
+    </script>
+</body>
+</html>
