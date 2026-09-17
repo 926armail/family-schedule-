@@ -2,38 +2,428 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0,
+                   maximum-scale=1.0,
+                   user-scalable=no">
 
     <title>График дежурств</title>
 
+    <!-- Telegram Web App -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <style>
+
         body {
-            font-family: Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color, #f4f4f5);
+            color: var(--tg-theme-text-color, #000000);
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif;
+
             text-align: center;
-            padding: 30px;
+
+            padding: 20px;
+            margin: 0;
         }
 
-        h1 {
-            color: #333;
+        h2 {
+            margin-bottom: 20px;
+            font-size: 22px;
         }
+
+        input[type="date"] {
+            padding: 12px;
+
+            font-size: 18px;
+
+            border-radius: 8px;
+
+            border: 1px solid #ccc;
+
+            width: 90%;
+
+            max-width: 300px;
+
+            margin-bottom: 30px;
+
+            font-family: inherit;
+        }
+
+        .result-box {
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            color: white;
+
+            display: inline-block;
+
+            width: 90%;
+
+            max-width: 300px;
+
+            box-shadow:
+                0 4px 6px rgba(0,0,0,0.1);
+
+            transition:
+                background-color 0.3s ease;
+        }
+
+        .details {
+
+            margin-top: 15px;
+
+            font-size: 16px;
+
+            color:
+                var(--tg-theme-hint-color, #707579);
+
+            line-height: 1.5;
+        }
+
     </style>
 </head>
 
+
 <body>
 
-<h1>График дежурств</h1>
+    <h2>Кто сегодня дома?</h2>
 
-<p>Страница работает!</p>
+    <input
+        type="date"
+        id="datePicker"
+    />
+
+    <br>
+
+    <div
+        id="resultBox"
+        class="result-box"
+        style="background-color: #9e9e9e;"
+    >
+        Выберите дату
+    </div>
+
+    <div
+        class="details"
+        id="detailsBox"
+    ></div>
+
 
 <script>
-    if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.ready();
-        window.Telegram.WebApp.expand();
+
+    // ==========================================
+    // TELEGRAM
+    // ==========================================
+
+    if (
+        window.Telegram &&
+        window.Telegram.WebApp
+    ) {
+
+        const tg =
+            window.Telegram.WebApp;
+
+        tg.ready();
+
+        tg.expand();
     }
 
-    console.log("Приложение запущено");
+
+    // ==========================================
+    // ЭЛЕМЕНТЫ СТРАНИЦЫ
+    // ==========================================
+
+    const datePicker =
+        document.getElementById("datePicker");
+
+    const resultBox =
+        document.getElementById("resultBox");
+
+    const detailsBox =
+        document.getElementById("detailsBox");
+
+
+    // ==========================================
+    // СЕГОДНЯ
+    // ==========================================
+
+    const today = new Date();
+
+    const yyyy =
+        today.getFullYear();
+
+    const mm =
+        String(today.getMonth() + 1)
+        .padStart(2, "0");
+
+    const dd =
+        String(today.getDate())
+        .padStart(2, "0");
+
+    datePicker.value =
+        `${yyyy}-${mm}-${dd}`;
+
+
+    // ==========================================
+    // РАСЧЁТ
+    // ==========================================
+
+    function updateSchedule() {
+
+        if (!datePicker.value) {
+
+            resultBox.innerHTML =
+                "Выберите дату";
+
+            resultBox.style.backgroundColor =
+                "#9e9e9e";
+
+            detailsBox.innerHTML = "";
+
+            return;
+        }
+
+
+        // ======================================
+        // ДАТА
+        // ======================================
+
+        const parts =
+            datePicker.value
+            .split("-")
+            .map(Number);
+
+        const year = parts[0];
+        const month = parts[1];
+        const day = parts[2];
+
+        const targetDate =
+            new Date(
+                year,
+                month - 1,
+                day
+            );
+
+        targetDate.setHours(0, 0, 0, 0);
+
+
+        const msPerDay =
+            24 * 60 * 60 * 1000;
+
+
+        // ======================================
+        // ЖЕНЩИНА
+        // ======================================
+
+        // 16 сентября 2026 —
+        // рабочий день
+
+        const womanAnchor =
+            new Date(2026, 8, 16);
+
+        womanAnchor.setHours(0, 0, 0, 0);
+
+
+        const daysDiffWoman =
+            Math.round(
+                (targetDate - womanAnchor)
+                / msPerDay
+            );
+
+
+        // 10-дневный цикл
+        //
+        // 0 — работа
+        // 1 — работа
+        // 2 — выходной
+        // 3 — выходной
+        // 4 — выходной
+        // 5 — работа
+        // 6 — работа
+        // 7 — работа
+        // 8 — выходной
+        // 9 — выходной
+
+        let womanCycleDay =
+            daysDiffWoman % 10;
+
+
+        if (womanCycleDay < 0) {
+
+            womanCycleDay += 10;
+        }
+
+
+        const womanWorks =
+            [0, 1, 5, 6, 7]
+            .includes(womanCycleDay);
+
+
+        // ======================================
+        // МУЖЧИНА
+        // ======================================
+
+        const dayOfWeek =
+            targetDate.getDay();
+
+
+        let manWorks = false;
+
+
+        // Вторник и четверг
+        // всегда рабочие
+
+        if (
+            dayOfWeek === 2 ||
+            dayOfWeek === 4
+        ) {
+
+            manWorks = true;
+        }
+
+
+        // ======================================
+        // ПЯТНИЦА
+        // ======================================
+
+        else if (dayOfWeek === 5) {
+
+            // 18 сентября 2026 —
+            // рабочая пятница
+
+            const manAnchor =
+                new Date(2026, 8, 18);
+
+            manAnchor.setHours(0, 0, 0, 0);
+
+
+            const daysDiffMan =
+                Math.round(
+                    (targetDate - manAnchor)
+                    / msPerDay
+                );
+
+
+            const weeksDiff =
+                Math.round(
+                    daysDiffMan / 7
+                );
+
+
+            // Чётная неделя —
+            // работает
+
+            manWorks =
+                Math.abs(weeksDiff) % 2 === 0;
+        }
+
+
+        // ======================================
+        // РЕЗУЛЬТАТ
+        // ======================================
+
+        if (
+            !manWorks &&
+            !womanWorks
+        ) {
+
+            resultBox.innerHTML =
+                "🏠 Оба дома";
+
+            resultBox.style.backgroundColor =
+                "#4CAF50";
+        }
+
+
+        else if (
+            !manWorks &&
+            womanWorks
+        ) {
+
+            resultBox.innerHTML =
+                "👨 Только мужчина";
+
+            resultBox.style.backgroundColor =
+                "#2196F3";
+        }
+
+
+        else if (
+            manWorks &&
+            !womanWorks
+        ) {
+
+            resultBox.innerHTML =
+                "👩 Только женщина";
+
+            resultBox.style.backgroundColor =
+                "#E91E63";
+        }
+
+
+        else {
+
+            resultBox.innerHTML =
+                "🏢 Обоих нет";
+
+            resultBox.style.backgroundColor =
+                "#607D8B";
+        }
+
+
+        // ======================================
+        // ПОДРОБНОСТИ
+        // ======================================
+
+        const manStatus =
+            manWorks
+                ? "на работе"
+                : "дома (выходной)";
+
+
+        const womanStatus =
+            womanWorks
+                ? "на работе"
+                : "дома (выходной)";
+
+
+        detailsBox.innerHTML =
+            `👨 Мужчина: ${manStatus}<br>` +
+            `👩 Женщина: ${womanStatus}`;
+    }
+
+
+    // ==========================================
+    // ИЗМЕНЕНИЕ ДАТЫ
+    // ==========================================
+
+    datePicker.addEventListener(
+        "change",
+        updateSchedule
+    );
+
+
+    // ==========================================
+    // ПЕРВЫЙ РАСЧЁТ
+    // ==========================================
+
+    updateSchedule();
+
 </script>
 
 </body>
