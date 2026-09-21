@@ -51,6 +51,7 @@
         max-width: 300px;
         margin-bottom: 30px;
         font-family: inherit;
+        box-sizing: border-box;
     }
 
     .result-box {
@@ -62,16 +63,20 @@
         display: inline-block;
         width: 90%;
         max-width: 300px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        transition: background-color 0.3s ease;
+        box-shadow:
+            0 4px 6px rgba(0,0,0,0.1);
+        transition:
+            background-color 0.3s ease;
     }
 
     .details {
         margin-top: 15px;
         font-size: 16px;
-        color: var(--tg-theme-hint-color, #707579);
+        color:
+            var(--tg-theme-hint-color, #707579);
         line-height: 1.5;
     }
+
 
     /* ==========================================
        КАЛЕНДАРЬ
@@ -84,117 +89,322 @@
         padding-bottom: 20px;
     }
 
+
     .calendar-title {
         font-size: 20px;
         font-weight: bold;
         margin-bottom: 15px;
     }
 
+
+    /* ==========================================
+       ПЕРЕКЛЮЧАТЕЛЬ МАМА / ПАПА / МАМА + ПАПА
+       ========================================== */
+
+    .schedule-switcher {
+        display: flex;
+
+        width: 100%;
+        max-width: 420px;
+
+        margin: 0 auto 15px;
+
+        padding: 4px;
+
+        box-sizing: border-box;
+
+        background:
+            var(--tg-theme-secondary-bg-color, #ffffff);
+
+        border-radius: 12px;
+
+        box-shadow:
+            0 2px 6px rgba(0,0,0,0.08);
+    }
+
+
+    .schedule-option {
+        flex: 1;
+
+        border: none;
+
+        background: transparent;
+
+        color:
+            var(--tg-theme-hint-color, #707579);
+
+        padding: 10px 5px;
+
+        min-height: 42px;
+
+        border-radius: 9px;
+
+        font-family: inherit;
+
+        font-size: 13px;
+
+        font-weight: 600;
+
+        cursor: pointer;
+
+        transition:
+            background-color 0.2s ease,
+            color 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+
+    .schedule-option:active {
+        transform: scale(0.98);
+    }
+
+
+    /* Активная кнопка */
+
+    .schedule-option.active {
+        background-color:
+            var(--tg-theme-bg-color, #f4f4f5);
+
+        color:
+            var(--tg-theme-text-color, #000000);
+
+        box-shadow:
+            0 1px 4px rgba(0,0,0,0.12);
+    }
+
+
+    /* Активная МАМА */
+
+    .schedule-option[data-mode="mom"].active {
+        color: #E91E63;
+    }
+
+
+    /* Активный ПАПА */
+
+    .schedule-option[data-mode="dad"].active {
+        color: #2196F3;
+    }
+
+
+    /* Активная МАМА + ПАПА */
+
+    .schedule-option[data-mode="both"].active {
+        color: #333333;
+    }
+
+
+    /* ==========================================
+       КАЛЕНДАРЬ
+       ========================================== */
+
     .calendar {
         width: 100%;
-        background: var(--tg-theme-secondary-bg-color, #ffffff);
+
+        background:
+            var(--tg-theme-secondary-bg-color, #ffffff);
+
         border-radius: 14px;
+
         padding: 10px;
+
         box-sizing: border-box;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+
+        box-shadow:
+            0 3px 8px rgba(0,0,0,0.08);
     }
+
 
     .calendar-weekdays {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
+
+        grid-template-columns:
+            repeat(7, 1fr);
+
         margin-bottom: 5px;
     }
+
 
     .calendar-weekday {
         font-size: 12px;
         font-weight: bold;
-        color: var(--tg-theme-hint-color, #707579);
+
+        color:
+            var(--tg-theme-hint-color, #707579);
+
         padding: 5px 0;
     }
 
+
     .calendar-days {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
+
+        grid-template-columns:
+            repeat(7, 1fr);
+
         gap: 4px;
     }
 
+
     .calendar-day {
         min-height: 42px;
+
         border-radius: 8px;
+
         display: flex;
+
         align-items: center;
+
         justify-content: center;
+
         font-size: 15px;
+
         font-weight: bold;
+
         color: white;
+
         cursor: pointer;
+
         box-sizing: border-box;
+
         transition:
             transform 0.1s ease,
-            opacity 0.1s ease;
+            opacity 0.1s ease,
+            background-color 0.2s ease;
     }
+
 
     .calendar-day:active {
         transform: scale(0.94);
         opacity: 0.8;
     }
 
+
     .calendar-empty {
         min-height: 42px;
     }
 
-    /* Цвета статусов */
+
+    /* ==========================================
+       ЦВЕТА СТАТУСОВ
+       ========================================== */
 
     .status-mom {
-        background-color: #E91E63;
+        background-color:
+            #E91E63;
     }
+
 
     .status-dad {
-        background-color: #2196F3;
+        background-color:
+            #2196F3;
     }
+
 
     .status-all-home {
-        background-color: #4CAF50;
+        background-color:
+            #4CAF50;
     }
+
 
     .status-nobody {
-        background-color: #607D8B;
+        background-color:
+            #607D8B;
     }
 
-    /* Выбранная дата */
+
+    /* Нейтральный день
+       используется в режиме
+       Мама или Папа */
+
+    .status-neutral {
+        background-color:
+            var(--tg-theme-secondary-bg-color, #ffffff);
+
+        color:
+            var(--tg-theme-hint-color, #707579);
+
+        border:
+            1px solid
+            rgba(128,128,128,0.12);
+    }
+
+
+    /* ==========================================
+       ВЫБРАННАЯ ДАТА
+       ========================================== */
 
     .calendar-day.selected {
-        outline: 3px solid var(--tg-theme-text-color, #000000);
+        outline:
+            3px solid
+            var(--tg-theme-text-color, #000000);
+
         outline-offset: -3px;
     }
 
-    /* Сегодня */
+
+    /* ==========================================
+       СЕГОДНЯ
+       ========================================== */
 
     .calendar-day.today {
-        box-shadow: inset 0 0 0 2px white;
+        box-shadow:
+            inset 0 0 0 2px white;
     }
 
-    /* Легенда */
+
+    /* ==========================================
+       ЛЕГЕНДА
+       ========================================== */
 
     .calendar-legend {
         display: flex;
+
         justify-content: center;
+
         flex-wrap: wrap;
+
         gap: 10px;
+
         margin-top: 15px;
+
         font-size: 12px;
     }
 
+
     .legend-item {
         display: flex;
+
         align-items: center;
+
         gap: 4px;
     }
+
 
     .legend-color {
         width: 12px;
         height: 12px;
+
         border-radius: 3px;
+    }
+
+
+    /* ==========================================
+       АДАПТАЦИЯ ДЛЯ МАЛЕНЬКОГО ЭКРАНА
+       ========================================== */
+
+    @media (max-width: 360px) {
+
+        .schedule-option {
+            font-size: 11px;
+            padding-left: 3px;
+            padding-right: 3px;
+        }
+
+        .calendar-day {
+            min-height: 39px;
+            font-size: 14px;
+        }
     }
 
 </style>
@@ -207,12 +417,15 @@
 ```
 <h2>Кто сегодня дома?</h2>
 
+
 <input
     type="date"
     id="datePicker"
 />
 
+
 <br>
+
 
 <div
     id="resultBox"
@@ -221,6 +434,7 @@
 >
     Выберите дату
 </div>
+
 
 <div
     class="details"
@@ -239,6 +453,40 @@
         id="calendarTitle"
     ></div>
 
+
+    <!-- ======================================
+         ПЕРЕКЛЮЧАТЕЛЬ ГРАФИКА
+         ====================================== -->
+
+    <div class="schedule-switcher">
+
+        <button
+            class="schedule-option active"
+            data-mode="mom"
+            type="button"
+        >
+            👩 Мама
+        </button>
+
+        <button
+            class="schedule-option"
+            data-mode="dad"
+            type="button"
+        >
+            👨 Папа
+        </button>
+
+        <button
+            class="schedule-option"
+            data-mode="both"
+            type="button"
+        >
+            👩‍❤️‍👨 Мама + Папа
+        </button>
+
+    </div>
+
+
     <div class="calendar">
 
         <div class="calendar-weekdays">
@@ -253,6 +501,7 @@
 
         </div>
 
+
         <div
             class="calendar-days"
             id="calendarDays"
@@ -261,37 +510,10 @@
     </div>
 
 
-    <div class="calendar-legend">
-
-        <div class="legend-item">
-            <div
-                class="legend-color status-mom"
-            ></div>
-            Мама
-        </div>
-
-        <div class="legend-item">
-            <div
-                class="legend-color status-dad"
-            ></div>
-            Папа
-        </div>
-
-        <div class="legend-item">
-            <div
-                class="legend-color status-all-home"
-            ></div>
-            Все дома
-        </div>
-
-        <div class="legend-item">
-            <div
-                class="legend-color status-nobody"
-            ></div>
-            Никого нет
-        </div>
-
-    </div>
+    <div
+        class="calendar-legend"
+        id="calendarLegend"
+    ></div>
 
 </div>
 ```
@@ -335,6 +557,23 @@
     const calendarDays =
         document.getElementById("calendarDays");
 
+    const calendarLegend =
+        document.getElementById("calendarLegend");
+
+    const scheduleOptions =
+        document.querySelectorAll(
+            ".schedule-option"
+        );
+
+
+    // ==========================================
+    // ТЕКУЩИЙ РЕЖИМ КАЛЕНДАРЯ
+    // ==========================================
+
+    // По умолчанию показываем график мамы
+
+    let calendarMode = "mom";
+
 
     // ==========================================
     // СЕГОДНЯ
@@ -354,6 +593,7 @@
         String(today.getDate())
         .padStart(2, "0");
 
+
     datePicker.value =
         `${yyyy}-${mm}-${dd}`;
 
@@ -368,6 +608,7 @@
             dateString
             .split("-")
             .map(Number);
+
 
         const year =
             parts[0];
@@ -386,6 +627,7 @@
                 day
             );
 
+
         targetDate.setHours(
             0, 0, 0, 0
         );
@@ -400,7 +642,7 @@
         // ======================================
 
         // 21 сентября 2026 —
-        // первый рабочий день нового графика
+        // первый рабочий день
 
         const womanAnchor =
             new Date(
@@ -408,6 +650,7 @@
                 8,
                 21
             );
+
 
         womanAnchor.setHours(
             0, 0, 0, 0
@@ -424,7 +667,7 @@
 
 
         // ======================================
-        // НОВЫЙ 14-ДНЕВНЫЙ ЦИКЛ МАМЫ
+        // 14-ДНЕВНЫЙ ЦИКЛ МАМЫ
         // ======================================
         //
         // 0  — работа
@@ -441,8 +684,6 @@
         // 11 — выходной
         // 12 — выходной
         // 13 — выходной
-        //
-        // Затем цикл повторяется.
         //
         // 2 работа
         // 2 отдых
@@ -512,6 +753,7 @@
                     18
                 );
 
+
             manAnchor.setHours(
                 0, 0, 0, 0
             );
@@ -556,6 +798,7 @@
 
             status =
                 "all-home";
+
         }
 
         else if (
@@ -565,6 +808,7 @@
 
             status =
                 "dad";
+
         }
 
         else if (
@@ -574,6 +818,7 @@
 
             status =
                 "mom";
+
         }
 
         else {
@@ -609,11 +854,14 @@
             resultBox.innerHTML =
                 "Выберите дату";
 
+
             resultBox.style.backgroundColor =
                 "#9e9e9e";
 
+
             detailsBox.innerHTML =
                 "";
+
 
             renderCalendar();
 
@@ -639,10 +887,11 @@
             resultBox.innerHTML =
                 "🏠 Все дома";
 
+
             resultBox.style.backgroundColor =
                 "#4CAF50";
-        }
 
+        }
 
         else if (
             schedule.status ===
@@ -652,10 +901,11 @@
             resultBox.innerHTML =
                 "👨 Только папа";
 
+
             resultBox.style.backgroundColor =
                 "#2196F3";
-        }
 
+        }
 
         else if (
             schedule.status ===
@@ -665,15 +915,17 @@
             resultBox.innerHTML =
                 "👩 Только мама";
 
+
             resultBox.style.backgroundColor =
                 "#E91E63";
-        }
 
+        }
 
         else {
 
             resultBox.innerHTML =
                 "🏢 Все на работе";
+
 
             resultBox.style.backgroundColor =
                 "#607D8B";
@@ -706,6 +958,77 @@
         // ======================================
 
         renderCalendar();
+    }
+
+
+    // ==========================================
+    // ОТОБРАЖЕНИЕ ЛЕГЕНДЫ
+    // ==========================================
+
+    function renderLegend() {
+
+        if (
+            calendarMode === "mom"
+        ) {
+
+            calendarLegend.innerHTML = `
+                <div class="legend-item">
+                    <div
+                        class="legend-color status-mom"
+                    ></div>
+                    Мама работает
+                </div>
+            `;
+
+        }
+
+        else if (
+            calendarMode === "dad"
+        ) {
+
+            calendarLegend.innerHTML = `
+                <div class="legend-item">
+                    <div
+                        class="legend-color status-dad"
+                    ></div>
+                    Папа работает
+                </div>
+            `;
+
+        }
+
+        else {
+
+            calendarLegend.innerHTML = `
+                <div class="legend-item">
+                    <div
+                        class="legend-color status-mom"
+                    ></div>
+                    Только мама
+                </div>
+
+                <div class="legend-item">
+                    <div
+                        class="legend-color status-dad"
+                    ></div>
+                    Только папа
+                </div>
+
+                <div class="legend-item">
+                    <div
+                        class="legend-color status-all-home"
+                    ></div>
+                    Все дома
+                </div>
+
+                <div class="legend-item">
+                    <div
+                        class="legend-color status-nobody"
+                    ></div>
+                    Оба работают
+                </div>
+            `;
+        }
     }
 
 
@@ -793,13 +1116,6 @@
             firstDay.getDay();
 
 
-        // JS:
-        // воскресенье = 0
-        // понедельник = 1
-        //
-        // Для календаря:
-        // понедельник = 0
-
         if (
             firstWeekday === 0
         ) {
@@ -825,7 +1141,7 @@
 
 
         // ======================================
-        // ПУСТЫЕ ЯЧЕЙКИ ПЕРЕД 1 ЧИСЛОМ
+        // ПУСТЫЕ ЯЧЕЙКИ
         // ======================================
 
         for (
@@ -839,8 +1155,10 @@
                     "div"
                 );
 
+
             empty.className =
                 "calendar-empty";
+
 
             calendarDays.appendChild(
                 empty
@@ -888,47 +1206,102 @@
 
 
             // ==================================
-            // ЦВЕТ
+            // ОТОБРАЖЕНИЕ В ЗАВИСИМОСТИ
+            // ОТ ВЫБРАННОГО РЕЖИМА
             // ==================================
 
             if (
-                schedule.status ===
-                "mom"
+                calendarMode === "mom"
             ) {
 
-                dayElement.classList.add(
-                    "status-mom"
-                );
+                // Только график мамы
+
+                if (
+                    schedule.womanWorks
+                ) {
+
+                    dayElement.classList.add(
+                        "status-mom"
+                    );
+
+                } else {
+
+                    dayElement.classList.add(
+                        "status-neutral"
+                    );
+                }
+
 
             }
 
             else if (
-                schedule.status ===
-                "dad"
+                calendarMode === "dad"
             ) {
 
-                dayElement.classList.add(
-                    "status-dad"
-                );
+                // Только график папы
 
-            }
+                if (
+                    schedule.manWorks
+                ) {
 
-            else if (
-                schedule.status ===
-                "all-home"
-            ) {
+                    dayElement.classList.add(
+                        "status-dad"
+                    );
 
-                dayElement.classList.add(
-                    "status-all-home"
-                );
+                } else {
+
+                    dayElement.classList.add(
+                        "status-neutral"
+                    );
+                }
+
 
             }
 
             else {
 
-                dayElement.classList.add(
-                    "status-nobody"
-                );
+                // Мама + Папа
+                // Полная текущая логика
+
+                if (
+                    schedule.status ===
+                    "mom"
+                ) {
+
+                    dayElement.classList.add(
+                        "status-mom"
+                    );
+
+                }
+
+                else if (
+                    schedule.status ===
+                    "dad"
+                ) {
+
+                    dayElement.classList.add(
+                        "status-dad"
+                    );
+
+                }
+
+                else if (
+                    schedule.status ===
+                    "all-home"
+                ) {
+
+                    dayElement.classList.add(
+                        "status-all-home"
+                    );
+
+                }
+
+                else {
+
+                    dayElement.classList.add(
+                        "status-nobody"
+                    );
+                }
             }
 
 
@@ -982,7 +1355,60 @@
                 dayElement
             );
         }
+
+
+        // Обновляем легенду
+
+        renderLegend();
     }
+
+
+    // ==========================================
+    // ПЕРЕКЛЮЧЕНИЕ МАМА / ПАПА / ОБА
+    // ==========================================
+
+    scheduleOptions.forEach(
+        function(option) {
+
+            option.addEventListener(
+                "click",
+                function() {
+
+                    // Определяем выбранный режим
+
+                    calendarMode =
+                        this.dataset.mode;
+
+
+                    // Убираем active
+                    // со всех кнопок
+
+                    scheduleOptions.forEach(
+                        function(item) {
+
+                            item.classList.remove(
+                                "active"
+                            );
+                        }
+                    );
+
+
+                    // Добавляем active
+                    // выбранной кнопке
+
+                    this.classList.add(
+                        "active"
+                    );
+
+
+                    // Перерисовываем
+                    // календарь
+
+                    renderCalendar();
+                }
+            );
+        }
+    );
 
 
     // ==========================================
